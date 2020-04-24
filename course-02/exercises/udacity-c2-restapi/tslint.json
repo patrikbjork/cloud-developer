@@ -1,6 +1,5 @@
 {
     "rulesDirectory": [
-      "node_modules/codelyzer"
     ],
     "rules": {
       "arrow-return-shorthand": true,
@@ -19,7 +18,8 @@
       "import-spacing": true,
       "indent": [
         true,
-        "spaces"
+        "spaces",
+        2
       ],
       "interface-over-type-literal": true,
       "label-position": true,
@@ -136,4 +136,3 @@
       "directive-class-suffix": true
     }
   }
-  
