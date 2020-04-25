@@ -22,6 +22,8 @@ router.get('/:id', async (req, res) => {
     const feed = await FeedItem.findByPk(Number.parseInt(req.params.id, 10));
 
     if (feed) {
+        feed.url = AWS.getGetSignedUrl(feed.url);
+
         res.send(feed);
     } else {
         res.status(404).send();
@@ -52,7 +54,7 @@ router.patch('/:id',
 
             savedItem.url = AWS.getGetSignedUrl(savedItem.url);
 
-            res.send(savedItem);
+            res.status(201).send(savedItem);
         }
 });
 

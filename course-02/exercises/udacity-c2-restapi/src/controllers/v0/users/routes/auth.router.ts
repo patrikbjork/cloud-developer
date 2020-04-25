@@ -7,44 +7,45 @@ import * as jwt from 'jsonwebtoken';
 import { NextFunction } from 'connect';
 
 import * as EmailValidator from 'email-validator';
+import {config} from '../../../../config/config';
+import * as os from 'os';
 
 const router: Router = Router();
 
-async function generatePassword(plainTextPassword: string): Promise<string> {
-    //@TODO Use Bcrypt to Generated Salted Hashed Passwords
-    return await bcrypt.genSalt().then(salt => bcrypt.hash(plainTextPassword, salt));
+export async function generatePassword(plainTextPassword: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    return await bcrypt.hash(plainTextPassword, salt);
 }
 
-async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
-    //@TODO Use Bcrypt to Compare your password to your Salted Hashed Password
+export async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(plainTextPassword, hash);
 }
 
-function generateJWT(user: User): string {
+export function generateJWT(user: User): string {
     //@TODO Use jwt to create a new JWT Payload containing
-    return jwt.sign('the payload?', 'generateSecret?', {subject: user.id});
+    return jwt.sign({subject: user.email}, config.jwt.secret, {algorithm: 'HS512'});
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
-    return next();
-    // if (!req.headers || !req.headers.authorization){
-    //     return res.status(401).send({ message: 'No authorization headers.' });
-    // }
-    
+    res.setHeader('hostname', os.hostname());
 
-    // const token_bearer = req.headers.authorization.split(' ');
-    // if(token_bearer.length != 2){
-    //     return res.status(401).send({ message: 'Malformed token.' });
-    // }
-    
-    // const token = token_bearer[1];
+    if (!req.headers || !req.headers.authorization) {
+        return res.status(401).send({ message: 'No authorization headers.' });
+    }
 
-    // return jwt.verify(token, "hello", (err, decoded) => {
-    //   if (err) {
-    //     return res.status(500).send({ auth: false, message: 'Failed to authenticate.' });
-    //   }
-    //   return next();
-    // });
+    const token_bearer = req.headers.authorization.split(' ');
+    if (token_bearer.length !== 2) {
+        return res.status(401).send({ message: 'Malformed token.' });
+    }
+    
+    const token = token_bearer[1];
+
+    return jwt.verify(token, config.jwt.secret, (err, decoded) => {
+      if (err) {
+        return res.status(401).send({ auth: false, message: 'Failed to authenticate.' });
+      }
+      return next();
+    });
 }
 
 router.get('/verification', 
