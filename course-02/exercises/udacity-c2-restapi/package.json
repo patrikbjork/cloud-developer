@@ -10,7 +10,7 @@
     "prod": "tsc && node ./www/server.js",
     "clean": "rm -rf www/ || true",
     "build": "npm run clean && tsc && cp -rf src/config www/config && cp .npmrc www/.npmrc && cp package.json www/package.json && cd www && zip -r Archive.zip . && cd ..",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register src/**/*.tests.ts"
   },
   "keywords": [],
   "author": "Patrik Björk",
@@ -31,7 +31,9 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.27",
+    "@types/chai": "^4.2.11",
     "@types/express": "^4.17.0",
+    "@types/mocha": "^7.0.2",
     "@types/node": "^11.13.17",
     "@types/sequelize": "^4.28.3",
     "@types/validator": "^10.11.1",
