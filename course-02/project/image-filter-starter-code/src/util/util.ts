@@ -13,13 +13,14 @@ export async function filterImageFromURL(inputURL: string): Promise<string>{
 
         try {
             const photo = await Jimp.read(inputURL);
-            const outpath = '/tmp/filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
+            const tempPath = getTempPath();
+            const outpath = tempPath + 'filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
             await photo
                 .resize(256, 256) // resize
                 .quality(60) // set JPEG quality
                 .greyscale() // set greyscale
-                .write(__dirname + outpath, (img) => {
-                    resolve(__dirname + outpath);
+                .write(outpath, (img) => {
+                    resolve(outpath);
                 });
         } catch (e) {
             reject(e);
@@ -37,3 +38,12 @@ export async function deleteLocalFiles(files:Array<string>){
         fs.unlinkSync(file);
     }
 }
+
+/**
+ * @return the path where temporary files are stored, with trailing slash.
+ */
+export function getTempPath() {
+    return __dirname + '/tmp/';
+}
+
+

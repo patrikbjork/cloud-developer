@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {filterImageFromURL, deleteLocalFiles, getTempPath} from './util/util';
 import fs from 'fs';
 
 (async () => {
@@ -39,7 +39,7 @@ import fs from 'fs';
           res.status(500).send('Error sending response.');
         }
 
-        const dir = __dirname + '/util/tmp/';
+        const dir = getTempPath();
         fs.readdir(dir, (err, files) => {
           deleteLocalFiles(files.map(file => dir + file));
         });
