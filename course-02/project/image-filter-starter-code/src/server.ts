@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import fs from 'fs';
 
 (async () => {
 
@@ -26,6 +27,28 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //    image_url: URL of a publicly accessible image
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
+  app.get("/filteredimage", async (req, res) => {
+    const {image_url} = req.query;
+
+    let path: string;
+    try {
+      path = await filterImageFromURL(image_url);
+
+      res.sendFile(path, err => {
+        if (err) {
+          res.status(500).send('Error sending response.');
+        }
+
+        const dir = __dirname + '/util/tmp/';
+        fs.readdir(dir, (err, files) => {
+          deleteLocalFiles(files.map(file => dir + file));
+        });
+      });
+    } catch (e) {
+      console.error(e.stack);
+      res.status(500).send('Error processing url.');
+    }
+  });
 
   /**************************************************************************** */
 
