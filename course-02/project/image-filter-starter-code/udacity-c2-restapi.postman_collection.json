@@ -1,0 +1,866 @@
+{
+	"info": {
+		"_postman_id": "ca9340ec-35be-44f8-b83e-08e29bac5023",
+		"name": "udacity-c2-restapi",
+		"description": "Requests that should work!",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "/api/v0/feed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"The count is equal to the number of items rx\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.count).to.eql(jsonData.rows.length);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 600ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(600);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v0/feed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed"
+							]
+						},
+						"description": "Get all the items in the feed"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/feed/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"A single item is returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v0/feed/:id",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed",
+								":id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						},
+						"description": "Request a specific feed item detail"
+					},
+					"response": [
+						{
+							"name": "/api/v0/feed/:id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v0/feed/:id",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v0",
+										"feed",
+										":id"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "4",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "133"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"85-gic7UchUXbyxmSqNsq7nx4+Eaas\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Mar 2019 15:07:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"caption\": \"hello0.5278862272947393\",\n    \"url\": null,\n    \"createdAt\": \"2019-03-26T14:16:58.442Z\",\n    \"updatedAt\": \"2019-03-26T14:16:58.443Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "/api/v0/user/auth valid registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4fa0ec55-4fb1-4eda-a7a3-08af62324ede",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"A single item is returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"hello@gmail.com\",\n\t\"password\":\"fancypass\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/users/auth",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/user/auth invalid registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3737edc-f79e-4823-b2c5-e84e6359e173",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"auth is false and a message is included in the error body\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"    pm.expect(jsonData.message).to.not.eql(null)",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"fancypass\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/users/auth",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/user/auth/login valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5524b249-cd4d-4e75-91c4-b2f690d53d44",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"body includes an email and token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.auth).to.eql(true);",
+									"    pm.expect(jsonData.user).to.not.eql(null);",
+									"    pm.expect(jsonData.token).to.not.eql(null)",
+									"    ",
+									"    pm.environment.set(\"token\", jsonData.token);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"hello@gmail.com\",\n\t\"password\":\"fancypass\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/users/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/user/auth/login invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "41cd51df-9472-4d8d-9177-b4f54d6a8530",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"auth is false and a message is included in the error body\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"    pm.expect(jsonData.message).to.not.eql(null)",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/users/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Unauthorized",
+			"item": [
+				{
+					"name": "/api/v0/feed unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/feed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed"
+							]
+						},
+						"description": "Post a new item to the feed"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Authorized",
+			"item": [
+				{
+					"name": "/api/v0/feed invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"body includes a message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/feed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed"
+							]
+						},
+						"description": "Post a new item to the feed"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/feed authorized Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"The post returns a new item with an id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"caption\": \"Hello\",\n    \"url\": \"test.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/feed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed"
+							]
+						},
+						"description": "Post a new item to the feed"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/feed authorized Copy Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"The post returns a new item with an id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"caption\": \"Hello\",\n    \"url\": \"test.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/feed/:id",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Post a new item to the feed"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/v0/feed/signed-url/:filename",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ad01629-c164-41ef-9d19-0a5fd13274af",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"The post returns a new item with an id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"caption\": \"Hello\",\n    \"url\": \"test.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v0/feed/signed-url/:fileName",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"feed",
+								"signed-url",
+								":fileName"
+							],
+							"variable": [
+								{
+									"key": "fileName",
+									"value": "myFile.png"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "65e7c108-0985-4ca7-9613-0898f005cf76",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cf28f76e-ffbb-4199-b636-1c080a86e465",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Put file with signed url",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/Users/patrik/Pictures/Saved Pictures/2015-09-13 12.55.48.png"
+					}
+				},
+				"url": {
+					"raw": "https://patrik-udagram-dev.s3.eu-north-1.amazonaws.com/myFile.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZRANLDY55HC2CR7K%2F20200423%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20200423T203942Z&X-Amz-Expires=300&X-Amz-Signature=1fbf2edaf1f4fe97af7f8bc912ce8482bde2e593a65617e55d9f559e643bbc84&X-Amz-SignedHeaders=host",
+					"protocol": "https",
+					"host": [
+						"patrik-udagram-dev",
+						"s3",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"myFile.png"
+					],
+					"query": [
+						{
+							"key": "X-Amz-Algorithm",
+							"value": "AWS4-HMAC-SHA256"
+						},
+						{
+							"key": "X-Amz-Credential",
+							"value": "AKIAZRANLDY55HC2CR7K%2F20200423%2Feu-north-1%2Fs3%2Faws4_request"
+						},
+						{
+							"key": "X-Amz-Date",
+							"value": "20200423T203942Z"
+						},
+						{
+							"key": "X-Amz-Expires",
+							"value": "300"
+						},
+						{
+							"key": "X-Amz-Signature",
+							"value": "1fbf2edaf1f4fe97af7f8bc912ce8482bde2e593a65617e55d9f559e643bbc84"
+						},
+						{
+							"key": "X-Amz-SignedHeaders",
+							"value": "host"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get/view image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://patrik-udagram-dev.s3.eu-north-1.amazonaws.com/patrikbjork.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAZRANLDY52CTLYCHH%2F20200425%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20200425T174119Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGYaCmV1LW5vcnRoLTEiSDBGAiEAtxIqo23DIhOiB7rDwoMqBRDvSW74%2FByx95SusXz5kxACIQCxUM7fZdTGlbxH2Gjyh9TQTKY7d0XrIYeh1ZGWJhemICq5AwiP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDY1NTAxMDUwNDI1MSIMw%2B7uKfFrnzXlPWQxKo0DkDfu6Gli5ndvPLeFbuqCqdVmgujgWsWwjO4DHaIg098mmMbQd%2F95unLv4SB60s%2FeTN%2FpgyXTTbDb%2B9tToF3kfadKJhFBVTCzzyXTmPdvbaCTlZfijAjDCXVmIkt7v6U0UNpNBbCWcGRYPQaEzfs3Wm144iah4tF2pR72j79Z6UsPM93MGYvp06mUeTYOm904hhM%2BSz5RLT8I3daOhcXMsJtyUktebkKqTIdzqnx49FTIo%2FkhN88h0Cz0QUWSruhAu2PikwRt%2FHEYwrpqdFf6FJ3Rdk6FwORE%2B%2BnLQJqZVrt1XanL0088T9Id0f97l8uz2fRZa2tsGYtXWraAuq8FLSu7gYD4kig5VBSQDnKJL4gQOcD7QhHfM23rb2xE7Eu3wKAaDvo6vkQjj%2B7nEbc7ni3yRAadUd6vQh5Ttar2w59YoMLZsYAYlmXqFe4%2B5jOA%2BWbJJwJfM8YLUVu9SSd%2BIph%2B%2B4Wid54PKWHFRphhosN73AcvUcMvv8tvzAFtRv6rNC9TYlfRQe7Lsol4IjDcgZH1BTrqAXHrNr9%2F7ih3eRlksTTTar%2FbVK8RTy2ARjgi8uDLK2FUD0jDpAnvZV%2Bx3cjQZcaEw1z74ICzIjILFJUWaQT50dS31%2BaHnsrhMqm75eigTl7vOVgpU5Uh3%2BKs8V4mzaZjELULVI7048xwq9ai71wK4sXe41fgQXAM15kNXqFlXD7sJozfu2t2XkgknlY4HAvQccU34QDfwjVfw3%2BOWq9oT0QLiauRc3a9nhM8OyZ67%2BmBZiBegYgS5SAmlS5RmK1db0gUVC2r96M77vUrYHKtXX6icDVnZ1PatRT2ITYudN5Zezz9WXeITFFCCw%3D%3D&X-Amz-Signature=0bfc06325fd5d59397b4125e5cdd790c3d4d70a28e42b1ff7ee45b7070427586&X-Amz-SignedHeaders=host",
+					"protocol": "https",
+					"host": [
+						"patrik-udagram-dev",
+						"s3",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"patrikbjork.jpg"
+					],
+					"query": [
+						{
+							"key": "X-Amz-Algorithm",
+							"value": "AWS4-HMAC-SHA256"
+						},
+						{
+							"key": "X-Amz-Credential",
+							"value": "ASIAZRANLDY52CTLYCHH%2F20200425%2Feu-north-1%2Fs3%2Faws4_request"
+						},
+						{
+							"key": "X-Amz-Date",
+							"value": "20200425T174119Z"
+						},
+						{
+							"key": "X-Amz-Expires",
+							"value": "300"
+						},
+						{
+							"key": "X-Amz-Security-Token",
+							"value": "IQoJb3JpZ2luX2VjEGYaCmV1LW5vcnRoLTEiSDBGAiEAtxIqo23DIhOiB7rDwoMqBRDvSW74%2FByx95SusXz5kxACIQCxUM7fZdTGlbxH2Gjyh9TQTKY7d0XrIYeh1ZGWJhemICq5AwiP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDY1NTAxMDUwNDI1MSIMw%2B7uKfFrnzXlPWQxKo0DkDfu6Gli5ndvPLeFbuqCqdVmgujgWsWwjO4DHaIg098mmMbQd%2F95unLv4SB60s%2FeTN%2FpgyXTTbDb%2B9tToF3kfadKJhFBVTCzzyXTmPdvbaCTlZfijAjDCXVmIkt7v6U0UNpNBbCWcGRYPQaEzfs3Wm144iah4tF2pR72j79Z6UsPM93MGYvp06mUeTYOm904hhM%2BSz5RLT8I3daOhcXMsJtyUktebkKqTIdzqnx49FTIo%2FkhN88h0Cz0QUWSruhAu2PikwRt%2FHEYwrpqdFf6FJ3Rdk6FwORE%2B%2BnLQJqZVrt1XanL0088T9Id0f97l8uz2fRZa2tsGYtXWraAuq8FLSu7gYD4kig5VBSQDnKJL4gQOcD7QhHfM23rb2xE7Eu3wKAaDvo6vkQjj%2B7nEbc7ni3yRAadUd6vQh5Ttar2w59YoMLZsYAYlmXqFe4%2B5jOA%2BWbJJwJfM8YLUVu9SSd%2BIph%2B%2B4Wid54PKWHFRphhosN73AcvUcMvv8tvzAFtRv6rNC9TYlfRQe7Lsol4IjDcgZH1BTrqAXHrNr9%2F7ih3eRlksTTTar%2FbVK8RTy2ARjgi8uDLK2FUD0jDpAnvZV%2Bx3cjQZcaEw1z74ICzIjILFJUWaQT50dS31%2BaHnsrhMqm75eigTl7vOVgpU5Uh3%2BKs8V4mzaZjELULVI7048xwq9ai71wK4sXe41fgQXAM15kNXqFlXD7sJozfu2t2XkgknlY4HAvQccU34QDfwjVfw3%2BOWq9oT0QLiauRc3a9nhM8OyZ67%2BmBZiBegYgS5SAmlS5RmK1db0gUVC2r96M77vUrYHKtXX6icDVnZ1PatRT2ITYudN5Zezz9WXeITFFCCw%3D%3D"
+						},
+						{
+							"key": "X-Amz-Signature",
+							"value": "0bfc06325fd5d59397b4125e5cdd790c3d4d70a28e42b1ff7ee45b7070427586"
+						},
+						{
+							"key": "X-Amz-SignedHeaders",
+							"value": "host"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "bc5d9c7a-7a6b-49ed-af16-206e17e8732f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a7cb0174-2461-42e2-979e-1b5922eea0fe",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "5b82cc50-210e-49b3-a170-d2ae04bea014",
+			"key": "host",
+			"value": "http://udagram-patrik-dev-dev.eu-north-1.elasticbeanstalk.com",
+			"type": "string"
+		},
+		{
+			"id": "0b8d2c24-3d7a-400b-a3ff-21a1d7a2d252",
+			"key": "token",
+			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoiaGVsbG9AZ21haWwuY29tIiwiaWF0IjoxNTg3NzQ3NjAwfQ.d9RqBjRQvfbxv_sc09MwIPGPh_CHzImIudWQp2b8kUwGj7cpY1MV0zUmRrj5BbsqI_266x1nfQJ2DgdhKiDjMQ",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
