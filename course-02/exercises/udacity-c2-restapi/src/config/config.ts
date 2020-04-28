@@ -12,6 +12,6 @@ export const config = {
     'aws_media_bucket': process.env.UDAGRAM_AWS_MEDIA_BUCKET
   },
   'jwt': {
-    'secret': 'LAKSJDFalkfdjaslkdfj'
+    'secret': process.env.UDAGRAM_JWT_SECRET
   }
 };

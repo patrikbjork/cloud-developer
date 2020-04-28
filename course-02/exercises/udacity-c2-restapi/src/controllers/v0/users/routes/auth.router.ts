@@ -9,6 +9,7 @@ import { NextFunction } from 'connect';
 import * as EmailValidator from 'email-validator';
 import {config} from '../../../../config/config';
 import * as os from 'os';
+import expressAsyncHandler from 'express-async-handler';
 
 const router: Router = Router();
 
@@ -54,7 +55,7 @@ router.get('/verification',
         return res.status(200).send({ auth: true, message: 'Authenticated.' });
 });
 
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', expressAsyncHandler(async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     // check email is valid
@@ -84,7 +85,7 @@ router.post('/login', async (req: Request, res: Response) => {
     const jwt = generateJWT(user);
 
     res.status(200).send({ auth: true, token: jwt, user: user.short()});
-});
+}));
 
 //register a new user
 router.post('/', async (req: Request, res: Response) => {
