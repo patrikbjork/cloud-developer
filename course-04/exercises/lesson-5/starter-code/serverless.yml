@@ -11,7 +11,7 @@ provider:
   runtime: nodejs12.x
 
   stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-1'}
+  region: ${opt:region, 'eu-north-1'}
 
   environment:
     GROUPS_TABLE: Groups-bjork-${self:provider.stage}
