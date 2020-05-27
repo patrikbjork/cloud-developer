@@ -1,16 +1,34 @@
 service:
-  name: serverless-todo-app
+  name: serverless-todo-app-bjork
 
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
+  - serverless-dynamodb-local
+  - serverless-offline
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
 
   stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-1'}
+  region: ${opt:region, 'eu-north-1'}
+
+  environment:
+    TODOS_TABLE: Todos-bjork-${self:provider.stage}
+    IMAGES_S3_BUCKET: serverless-todo-images-bjork-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
+    AUTH_0_SECRET_ID: Auth0Secret-${self:provider.stage}
+    AUTH_0_SECRET_FIELD: auth0Secret
+
+custom:
+  dynamodb:
+    stages:
+      - ${self:provider.stage}
+    start:
+      migrate: true
+  serverless-offline:
+    useChildProcesses: true
 
 functions:
 
@@ -24,15 +42,31 @@ functions:
       - http:
           method: get
           path: todos
-
+          cors: true
+    iamRoleStatementsName: s-t-a-b-d-GT-eu-north-1-lRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+        Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
   # TODO: Configure this function
-  GetTodos:
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
     events:
       - http:
           method: post
           path: todos
+          cors: true
+    iamRoleStatementsName: s-t-a-b-d-CT-eu-north-1-lRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   # TODO: Configure this function
   UpdateTodo:
@@ -41,6 +75,13 @@ functions:
       - http:
           method: patch
           path: todos/{todoId}
+          cors: true
+    iamRoleStatementsName: s-t-a-b-d-UT-eu-north-1-lRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   # TODO: Configure this function
   DeleteTodo:
@@ -49,6 +90,13 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
+          cors: true
+    iamRoleStatementsName: s-t-a-b-d-DT-eu-north-1-lRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   # TODO: Configure this function
   GenerateUploadUrl:
@@ -57,7 +105,106 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
+          cors: true
+    iamRoleStatementsName: s-t-a-b-d-GUU-eu-north-1-lRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+        Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
 
 resources:
   Resources:
     # TODO: Add any necessary AWS resources
+    TodosDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: todoId
+            AttributeType: S
+#          - AttributeName: name
+#            AttributeType: S
+        KeySchema:
+          - AttributeName: todoId
+            KeyType: HASH
+#          - AttributeName: name
+#            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.TODOS_TABLE}
+
+    AttachmentsBucket:
+      Type: AWS::S3::Bucket
+#      DependsOn: SNSTopicPolicy
+      Properties:
+        BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
+#        NotificationConfiguration:
+#          TopicConfigurations:
+#            - Event: s3:ObjectCreated:Put
+#              Topic: !Ref ImagesTopic
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+#    SNSTopicPolicy:
+#      Type: AWS::SNS::TopicPolicy
+#      Properties:
+#        PolicyDocument:
+#          Version: "2012-10-17"
+#          Statement:
+#            - Effect: Allow
+#              Principal:
+#                AWS: "*"
+#              Action: sns:Publish
+#              Resource:
+#                !Ref ImagesTopic
+#              Condition:
+#                ArnLike:
+#                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}
+#        Topics:
+#          - !Ref ImagesTopic
+
+#    KMSKey:
+#      Type: AWS::KMS::Key
+#      Properties:
+#        Description: KMS key to encrypt Auth0 secret
+#        KeyPolicy:
+#          Version: '2012-10-17'
+#          Id: key-default-1
+#          Statement:
+#            - Sid: Allow administration of the key
+#              Effect: Allow
+#              Principal:
+#                AWS:
+#                  Fn::Join:
+#                    - ':'
+#                    - - 'arn:aws:iam:'
+#                      - Ref: AWS::AccountId
+#                      - 'root'
+#              Action:
+#                - 'kms:*'
+#              Resource: '*'
+#
+#    KMSKeyAlias:
+#      Type: AWS::KMS::Alias
+#      Properties:
+#        AliasName: alias/auth0Key-${self:provider.stage}
+#        TargetKeyId: !Ref KMSKey
+#
+#    Auth0Secret:
+#      Type: AWS::SecretsManager::Secret
+#      Properties:
+#        Name: ${self:provider.environment.AUTH_0_SECRET_ID}
+#        Description: Auth0 secret
+#        KmsKeyId: !Ref KMSKey
+#
