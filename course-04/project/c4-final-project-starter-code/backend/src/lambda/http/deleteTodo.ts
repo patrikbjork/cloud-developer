@@ -2,6 +2,7 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import {createDynamoDBClient} from "../../dynamodb/dynamoDbClient";
+import {getUserId} from "../utils";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
@@ -10,10 +11,11 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const todosTable = process.env.TODOS_TABLE
 
   const documentClient = createDynamoDBClient();
+  const userId = getUserId(event)
 
   await documentClient.delete({
     TableName: todosTable,
-    Key: {todoId: todoId},
+    Key: {todoId: todoId, userId: userId},
     ReturnItemCollectionMetrics: "SIZE",
     ReturnValues: "ALL_OLD"
   }).promise();

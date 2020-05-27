@@ -1,14 +1,15 @@
-import { CustomAuthorizerEvent, CustomAuthorizerResult } from 'aws-lambda'
+import {
+  APIGatewayTokenAuthorizerEvent,
+  CustomAuthorizerResult
+} from 'aws-lambda'
 import 'source-map-support/register'
 
 import { createLogger } from '../../utils/logger'
-// import Axios from 'axios'
 import { Jwt } from '../../auth/Jwt'
 import { JwtPayload } from '../../auth/JwtPayload'
 import {verify, decode} from "jsonwebtoken";
 
 import {JwksClient} from "./jwksClient";
-import * as util from "util";
 
 const logger = createLogger('auth')
 
@@ -18,7 +19,7 @@ const logger = createLogger('auth')
 const jwksUrl = 'https://dev-jyv2wd64.eu.auth0.com/.well-known/jwks.json'
 
 export const handler = async (
-  event: CustomAuthorizerEvent
+  event: APIGatewayTokenAuthorizerEvent
 ): Promise<CustomAuthorizerResult> => {
   logger.info('Authorizing a user', event.authorizationToken)
   try {
@@ -63,15 +64,12 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 
   const jwksClient = new JwksClient({jwksUri: jwksUrl});
 
-  const getJwksPromise = util.promisify(jwksClient.getJwks)
+  const jwks = await jwksClient.getSigningKey(jwt.header.kid) as any
 
-  const jwks = await getJwksPromise() as string;
-
-  return verify(token, jwks, { algorithms: ['RS256'] }) as JwtPayload;
+  return verify(token, jwks.publicKey, { algorithms: ['RS256'] }) as JwtPayload;
   // TODO: Implement token verification
   // You should implement it similarly to how it was implemented for the exercise for the lesson 5
   // You can read more about how to do this here: https://auth0.com/blog/navigating-rs256-and-jwks/
-  return jwt.payload
 }
 
 function getToken(authHeader: string): string {
@@ -85,18 +83,3 @@ function getToken(authHeader: string): string {
 
   return token
 }
-
-/*
-function verifyToken(authHeader: string, certificate: string, options: VerifyOptions): JwtToken {
-  if (!authHeader)
-    throw new Error('No authentication header')
-
-  if (!authHeader.toLowerCase().startsWith('bearer '))
-    throw new Error('Invalid authentication header')
-
-  const split = authHeader.split(' ')
-  const token = split[1]
-
-  return verify(token, certificate, options) as JwtToken
-}
-*/

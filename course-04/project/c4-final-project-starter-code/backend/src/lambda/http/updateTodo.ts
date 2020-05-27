@@ -5,6 +5,7 @@ import {DocumentClient} from 'aws-sdk/clients/dynamodb'
 
 import {UpdateTodoRequest} from '../../requests/UpdateTodoRequest'
 import {createDynamoDBClient} from "../../dynamodb/dynamoDbClient";
+import {getUserId} from "../utils";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const todoId = event.pathParameters.todoId
@@ -12,6 +13,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     const docClient: DocumentClient = createDynamoDBClient()
     const todosTable = process.env.TODOS_TABLE
+
+    const userId = getUserId(event)
 
     // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
     await docClient.update({
@@ -25,7 +28,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
             ":dueDate": updatedTodo.dueDate,
             ":done": updatedTodo.done
         },
-        Key: {todoId: todoId}
+        Key: {todoId: todoId, userId: userId}
     }).promise();
 
     return {
@@ -37,17 +40,3 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         body: ''
     };
 }
-
-
-/*function createDynamoDBClient() {
-  if (process.env.IS_OFFLINE) {
-    console.log('Creating a local DynamoDB instance')
-    return new DocumentClient({
-      region: 'localhost',
-      endpoint: 'http://localhost:8000'
-    })
-  }
-
-  return new DocumentClient()
-}*/
-
