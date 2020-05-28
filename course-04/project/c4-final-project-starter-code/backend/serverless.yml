@@ -6,6 +6,7 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-dynamodb-local
   - serverless-offline
+  - serverless-plugin-tracing
 
 provider:
   name: aws
@@ -21,6 +22,18 @@ provider:
     SIGNED_URL_EXPIRATION: 300
     AUTH_0_SECRET_ID: Auth0Secret-${self:provider.stage}
     AUTH_0_SECRET_FIELD: auth0Secret
+
+  tracing:
+    lambda: true
+    apiGateway: true
+
+  iamRoleStatements:
+    - Effect: "Allow" # xray permissions (required)
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
 
 custom:
   dynamodb:
@@ -45,6 +58,7 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+    iamRoleStatementsInherit: true
     iamRoleStatementsName: s-t-a-b-d-GT-eu-north-1-lRole
     iamRoleStatements:
       - Effect: Allow
@@ -68,6 +82,7 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+    iamRoleStatementsInherit: true
     iamRoleStatementsName: s-t-a-b-d-CT-eu-north-1-lRole
     iamRoleStatements:
       - Effect: Allow
@@ -84,6 +99,7 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
+    iamRoleStatementsInherit: true
     iamRoleStatementsName: s-t-a-b-d-UT-eu-north-1-lRole
     iamRoleStatements:
       - Effect: Allow
@@ -100,6 +116,7 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
+    iamRoleStatementsInherit: true
     iamRoleStatementsName: s-t-a-b-d-DT-eu-north-1-lRole
     iamRoleStatements:
       - Effect: Allow
@@ -116,6 +133,7 @@ functions:
           path: todos/{todoId}/attachment
           cors: true
           authorizer: Auth
+    iamRoleStatementsInherit: true
     iamRoleStatementsName: s-t-a-b-d-GUU-eu-north-1-lRole
     iamRoleStatements:
       - Effect: Allow

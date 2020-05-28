@@ -1,15 +1,14 @@
 import 'source-map-support/register'
-import * as s3 from 'aws-sdk/clients/s3'
 
 import {APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler} from 'aws-lambda'
-
-const bucket = process.env.IMAGES_S3_BUCKET;
+import {S3} from "../../s3/s3";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const todoId = event.pathParameters.todoId
+    const s3 = new S3()
 
     // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
-    const signedUrl = new s3().getSignedUrl('putObject', {Bucket: bucket, Key: todoId});
+    const signedUrl = s3.getSignedPutUrl(todoId);
 
     return {
         statusCode: 200,

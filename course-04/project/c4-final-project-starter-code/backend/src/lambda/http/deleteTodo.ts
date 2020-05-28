@@ -1,24 +1,18 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import {createDynamoDBClient} from "../../dynamodb/dynamoDbClient";
+import {APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult} from 'aws-lambda'
 import {getUserId} from "../utils";
+import {DbAccess} from "../../dynamodb/dbAccess";
+
+const dbAccess = new DbAccess()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
 
   // TODO: Remove a TODO item by id
-  const todosTable = process.env.TODOS_TABLE
-
-  const documentClient = createDynamoDBClient();
   const userId = getUserId(event)
 
-  await documentClient.delete({
-    TableName: todosTable,
-    Key: {todoId: todoId, userId: userId},
-    ReturnItemCollectionMetrics: "SIZE",
-    ReturnValues: "ALL_OLD"
-  }).promise();
+  await dbAccess.deleteTodo(todoId, userId).promise();
   // TODO: Implement creating a new TODO item
   return {
     statusCode: 201,

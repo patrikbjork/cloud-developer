@@ -1,35 +1,26 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import {createDynamoDBClient} from "../../dynamodb/dynamoDbClient";
-import {TodoItem} from "../../models/TodoItem";
-import * as s3 from "aws-sdk/clients/s3";
+import {APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult} from 'aws-lambda'
 import {getUserId} from "../utils";
+import {DbAccess} from "../../dynamodb/dbAccess";
+import {S3} from "../../s3/s3";
+import {TodoItem} from "../../models/TodoItem";
 
-const bucket = process.env.IMAGES_S3_BUCKET;
-const sThree = new s3();
+const dbAccess = new DbAccess()
+const s3 = new S3()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   // TODO: Get all TODO items for a current user
-    const todosTable = process.env.TODOS_TABLE
-    const todosTableIndex = process.env.INDEX_NAME
+
 
     const userId = getUserId(event)
 
-    const documentClient = createDynamoDBClient();
-
-    const todos = await documentClient.query({
-        TableName: todosTable,
-        IndexName: todosTableIndex,
-        KeyConditionExpression: 'userId = :userId',
-        ExpressionAttributeValues: {':userId': userId}
-    }).promise();
+    const todos = await dbAccess.getTodos(userId).promise();
 
     const promises = [];
     todos.Items.forEach((item: TodoItem) => {
-        const promise = sThree.getObject({Bucket: bucket, Key: item.todoId}).promise().then(_ => {
-            item.attachmentUrl = sThree.getSignedUrl('getObject', {Bucket: bucket, Key: item.todoId})
-        }).catch(_ => {});
+        const promise = s3.getSignedGetUrlIfExists(item.todoId)
+        promise.then(value => item.attachmentUrl = value)
         promises.push(promise);
     })
 
