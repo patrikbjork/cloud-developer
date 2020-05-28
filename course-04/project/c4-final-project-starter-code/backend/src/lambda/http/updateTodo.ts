@@ -5,7 +5,9 @@ import {APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult} fro
 import {UpdateTodoRequest} from '../../requests/UpdateTodoRequest'
 import {getUserId} from "../utils";
 import {DbAccess} from "../../dynamodb/dbAccess";
+import { createLogger } from '../../utils/logger'
 
+const logger = createLogger('updateTodo')
 const dbAccess = new DbAccess()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -16,6 +18,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
     await dbAccess.updateTodo(updatedTodo, todoId, userId).promise();
+
+    logger.info('Updated TODO: ' + todoId)
 
     return {
         statusCode: 201,

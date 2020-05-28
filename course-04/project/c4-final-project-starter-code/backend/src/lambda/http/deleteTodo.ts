@@ -3,7 +3,9 @@ import 'source-map-support/register'
 import {APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult} from 'aws-lambda'
 import {getUserId} from "../utils";
 import {DbAccess} from "../../dynamodb/dbAccess";
+import { createLogger } from '../../utils/logger'
 
+const logger = createLogger('deleteTodo')
 const dbAccess = new DbAccess()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -14,6 +16,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   await dbAccess.deleteTodo(todoId, userId).promise();
   // TODO: Implement creating a new TODO item
+
+  logger.info('Deleted TODO: ' + todoId)
+
   return {
     statusCode: 201,
     headers: {

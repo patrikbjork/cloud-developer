@@ -7,7 +7,9 @@ import * as uuid from 'uuid'
 import {TodoItem} from "../../models/TodoItem";
 import {getUserId} from "../utils";
 import {DbAccess} from "../../dynamodb/dbAccess";
+import { createLogger } from '../../utils/logger'
 
+const logger = createLogger('createTodo')
 const dbAccess = new DbAccess()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -21,10 +23,10 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         createdAt: new Date().toISOString(),
         ...createTodoRequest
     };
-    console.log('newTodo: ' + newTodo)
 
     await dbAccess.createTodo(newTodo).promise();
     // TODO: Implement creating a new TODO item
+    logger.info('Created new TODO: ' + JSON.stringify(newTodo))
 
     return {
         statusCode: 200,

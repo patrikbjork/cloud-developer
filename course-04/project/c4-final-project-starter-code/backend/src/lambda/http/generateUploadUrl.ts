@@ -2,6 +2,9 @@ import 'source-map-support/register'
 
 import {APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler} from 'aws-lambda'
 import {S3} from "../../s3/s3";
+import { createLogger } from '../../utils/logger'
+
+const logger = createLogger('generateUploadUrl')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const todoId = event.pathParameters.todoId
@@ -9,6 +12,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
     const signedUrl = s3.getSignedPutUrl(todoId);
+    logger.info('Generated signed put url: ' + signedUrl)
 
     return {
         statusCode: 200,

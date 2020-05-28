@@ -5,7 +5,9 @@ import {getUserId} from "../utils";
 import {DbAccess} from "../../dynamodb/dbAccess";
 import {S3} from "../../s3/s3";
 import {TodoItem} from "../../models/TodoItem";
+import { createLogger } from '../../utils/logger'
 
+const logger = createLogger('getTodos')
 const dbAccess = new DbAccess()
 const s3 = new S3()
 
@@ -16,6 +18,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const userId = getUserId(event)
 
     const todos = await dbAccess.getTodos(userId).promise();
+
+    logger.info('Fetched todos. Size=' + todos.Items.length)
 
     const promises = [];
     todos.Items.forEach((item: TodoItem) => {
